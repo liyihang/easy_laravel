@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Sample App</title>
-</head>
-<body>
-  <h1>主页</h1>
-</body>
-</html>
+@extend('layouts/default')
+@section('content')
+<h1>主要页面</h1>

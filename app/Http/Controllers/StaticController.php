@@ -8,14 +8,14 @@ class StaticController extends Controller
 {
     //
     public function home(){
-        return "主页";
+        return view('static/home');
     }
 
     public function about(){
 
-        return "关于页";
+        return view('static/about');
     }
     public function help(){
-        return '帮助页';
+        return view('static/help');
         }
 }
