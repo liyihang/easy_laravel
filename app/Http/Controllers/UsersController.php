@@ -22,4 +22,16 @@ class UsersController extends Controller
         
         return view('users.create');
     }
+    /**
+     * 用户校验注册页面
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request,[
+            'name'=>'required|min:6|max:32',
+            'email'=>'required|email|unique:users|max:255',
+            'password'=>'required|confirmed|min:6'
+        ]);
+
+    }
 }
