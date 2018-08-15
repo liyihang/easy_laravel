@@ -62,6 +62,7 @@ class UsersController extends Controller
             "email"=>$request->email,
             "password"=>bcrypt($request->password)
         ]);
+        
         /**
          * session() 方法来访问会话实例。而当我们想存入一条缓存的数据，让它只在下一次的请求内有效时，
          * 则可以使用 flash 方法。flash 方法接收两个参数，第一个为会话的键，第二个为会话的值，我们可以通过下面这行代码的为会话赋值。
