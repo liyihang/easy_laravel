@@ -130,6 +130,7 @@ class UsersController extends Controller
             $data['password'] = bcrypt($request->password);
 
         }
+        
         $this->update($data);
         session()->flash('success','信息更新成功');
         return redirect()->route('users.show',$user->id);
