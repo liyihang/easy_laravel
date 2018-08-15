@@ -5,9 +5,29 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class UsersController extends Controller
 {
+
+    /**
+     * 权限控制
+     * 我们在 __construct 方法中调用了 middleware 方法，该方法接收两个参数，
+     * 第一个为中间件的名称，第二个为要进行过滤的动作。
+     * 我们通过 except 方法来设定 指定动作 不使用 Auth 中间件进行过滤，意为 —— 除了此处指定的动作以外，
+     * 所有其他动作都必须登录用户才能访问，类似于黑名单的过滤机制。
+     * 
+     */
+    public function __construct()
+    {
+        $this->middleware('auth',[
+            'except'=>['create','store']
+        ]);
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+
     /**
      * 用戶顯示
      */
@@ -56,6 +76,62 @@ class UsersController extends Controller
          * redirect()->route('users.show', [$user->id]);
          */
         return redirect()->route('users.show',[$user]);
+
+    }
+
+    // 用户信息的编辑
+    public function edit(User $user)
+    {
+        // 验证用户授权策略  继承自Controllers 里的AuthorizesRequests trait 里面
+        try{
+
+            $this->authorize('update',$user);
+
+        }catch(AuthorizationException $e){
+            return abort(403, '无权访问');
+        }
+
+        return view('users.edit',compact('user'));
+    }
+
+    // 用户信息编辑
+    // 第一个为自动解析用户 id 对应的用户实例对象，
+    // 第二个则为更新用户表单的输入数据。在我们接收到用户提交的信息时，
+    // 需要先对用户提交的信息进行验证，最终调用 update 方法对用户对象进行更新。
+    // 在用户个人资料更新成功后，我们还需要将用户重定向到个人页面，方便用户第一时间查看到自己更改后的个人信息。
+    public function update(User $user,Requeset $request)
+    {
+        $this->validate($request,[
+            'name'=>'required|max:32',
+            'password'=>'nullable|confirmed|min:6'
+        ]);
+
+        //通edit的一样  验证用户授权策略
+
+        try {
+            $this->authorize('update', $user);
+        } catch (AuthorizationException $e) {
+            return abort(403, '无权访问');
+        }
+
+        //用户密码验证的 required 规则换成 nullable，这意味着当用户提供空白密码时也会通过验证，
+        //因此我们需要对传入的 password 进行判断，当其值不为空时才将其赋值给 data
+
+        // $this->update([
+        //     'name'=>$request->name,
+        //     'password'=>bcrypt($request->password),
+        // ]);
+
+        $data = [];
+        $data['name'] = $request->name;
+        if($request->password)
+        {
+            $data['password'] = bcrypt($request->password);
+
+        }
+        $this->update($data);
+        session()->flash('success','信息更新成功');
+        return redirect()->route('users.show',$user->id);
 
     }
 }

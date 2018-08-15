@@ -177,3 +177,12 @@ input {
 .panel {
   margin-top: 50px;
 }
+//头像样式
+.gravatar_edit {
+  margin: 15px auto;
+  text-align: center;
+  .gravatar {
+    float: none;
+    max-width: 100px;
+  }
+}
