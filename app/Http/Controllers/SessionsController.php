@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Auth;
-
 class SessionsController extends Controller
 {
     //显示登录页面
