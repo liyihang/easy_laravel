@@ -10,6 +10,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 class UsersController extends Controller
 {
 
+    
     /**
      * 权限控制
      * 我们在 __construct 方法中调用了 middleware 方法，该方法接收两个参数，
