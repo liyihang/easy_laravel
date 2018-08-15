@@ -22,11 +22,19 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->middleware('auth',[
-            'except'=>['create','store']
+            'except'=>['create','store','index']
         ]);
         $this->middleware('guest', [
             'only' => ['create']
         ]);
+    }
+
+    // 用户首页展示
+
+    public function index()
+    {
+        $users = User::all();
+        return view('users.index',compact('users'));
     }
 
     /**
