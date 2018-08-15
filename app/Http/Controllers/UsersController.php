@@ -65,7 +65,7 @@ class UsersController extends Controller
         /**
          * session() 方法来访问会话实例。而当我们想存入一条缓存的数据，让它只在下一次的请求内有效时，
          * 则可以使用 flash 方法。flash 方法接收两个参数，第一个为会话的键，第二个为会话的值，我们可以通过下面这行代码的为会话赋值。
-         *之后我们可以使用 session()->get('success') 通过键名来取出对应会话中的数据，取出的结果为 欢迎，您将在这里开启一段新的旅程~。    
+         *之后我们可以使用 session()->get('success') 通过键名来取出对应会话中的数据，取出的结果为 "xxxxxx"~。    
         **/
         Auth::login($user);
         session()->flash('success','欢迎来到沙与沫，生命不息，装逼不止');
