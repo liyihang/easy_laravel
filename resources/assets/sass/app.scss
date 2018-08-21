@@ -199,3 +199,11 @@ input {
     border-bottom: 1px solid $gray-lighter;
   }
 }
+
+
+//删除样式
+.delete-btn {
+  float: right;
+  position: relative;
+  right: 0;
+}
