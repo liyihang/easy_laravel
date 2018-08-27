@@ -7,6 +7,8 @@ use App\Models\User;
 use Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 
+use Mail;
+
 class UsersController extends Controller
 {
 
@@ -22,7 +24,7 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->middleware('auth',[
-            'except'=>['show','create','store','index']
+            'except'=>['show','create','store','index','confirmEmail']
         ]);
         $this->middleware('guest', [
             'only' => ['create']
@@ -155,4 +157,39 @@ class UsersController extends Controller
         return back();
 
     }
+    /**
+     * send actived email
+     * 
+     */
+    public function sendActivedEmail()
+    {
+        $view = 'emails.confirm';
+        $data = compact('user');
+        $from = 'lidoudou@gmail.com';
+        $name = 'lidoudou';
+        $to = $user->email;
+        $subject = "感谢注册 <h3>沙与沫</h3>！请确认你的邮箱。";
+
+        Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
+            $message->from($from, $name)->to($to)->subject($subject);
+        });
+    }
+    
+    /**
+     * confirmed the email waether actived
+     * 
+     */
+    public function confirmEmail($token)
+    {
+        $user = User::where('activation_token', $token)->firstOrFail();
+
+        $user->activated = true;
+        $user->activation_token = null;
+        $user->save();
+
+        Auth::login($user);
+        session()->flash('success', '恭喜你，激活成功！');
+        return redirect()->route('users.show', [$user]);
+    }
+
 }
